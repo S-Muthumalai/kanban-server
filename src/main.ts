@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import morgan from 'morgan';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.use(morgan('dev'));
   const config = new DocumentBuilder()
     .setTitle('Kanban API')
     .setDescription('The Kanban board API')
@@ -14,12 +15,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(process.env.PORT ?? 8005);
+  app.enableCors();
+
+  await app.listen(process.env.PORT ?? 8001);
   console.log(
-    `🚀 Application is running on: http://localhost:${process.env.PORT ?? 8005}`,
+    `🚀 Application is running on: http://localhost:${process.env.PORT ?? 8001}`,
   );
   console.log(
-    `📖 Swagger docs available at: http://localhost:${process.env.PORT ?? 8005}/api`,
+    `📖 Swagger docs available at: http://localhost:${process.env.PORT ?? 8001}/api`,
   );
 }
 void bootstrap();
