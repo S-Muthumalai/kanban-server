@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum CardStatus {
@@ -27,4 +27,14 @@ export class CreateCardDto {
   @IsOptional()
   @IsEnum(CardStatus)
   status?: CardStatus;
+
+  @ApiProperty({ example: 'John Doe', required: false })
+  @IsOptional()
+  @IsString()
+  assigneeName?: string;
+
+  @ApiProperty({ example: 5, required: false })
+  @IsOptional()
+  @IsNumber()
+  storyPoints?: number;
 }

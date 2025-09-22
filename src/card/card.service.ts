@@ -7,44 +7,45 @@ import { UpdateCardDto } from './dto/update-card.dto';
 export class CardService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createCardDto: CreateCardDto) {
+  async create(createCardDto: CreateCardDto, userId: number) {
     return this.prisma.cardDetail.create({
-      data: createCardDto,
+      data: { ...createCardDto, userId },
     });
   }
 
-  async findAll() {
+  async findAll(userId: number) {
     return this.prisma.cardDetail.findMany({
+      where: { userId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
     const card = await this.prisma.cardDetail.findUnique({
-      where: { id },
+      where: { id, userId },
     });
 
     if (!card) {
-      throw new NotFoundException(`Card with ID ${id} not found`);
+      throw new NotFoundException(`Card with ID ${id} not found for this user`);
     }
 
     return card;
   }
 
-  async update(id: number, updateCardDto: UpdateCardDto) {
-    await this.findOne(id);
+  async update(id: number, updateCardDto: UpdateCardDto, userId: number) {
+    await this.findOne(id, userId); // Ensure card belongs to user
 
     return this.prisma.cardDetail.update({
-      where: { id },
+      where: { id, userId },
       data: updateCardDto,
     });
   }
 
-  async remove(id: number) {
-    await this.findOne(id);
+  async remove(id: number, userId: number) {
+    await this.findOne(id, userId); // Ensure card belongs to user
 
     return this.prisma.cardDetail.delete({
-      where: { id },
+      where: { id, userId },
     });
   }
 }

@@ -22,11 +22,12 @@ enum CardStatus {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   firstName String
   lastName  String
-  email     String @unique
+  email     String     @unique
   password  String
+  cards     CardDetail[]
 }
 
 model CardDetail {
@@ -37,4 +38,8 @@ model CardDetail {
   status      CardStatus @default(TODO)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id])
+  assigneeName String?
+  storyPoints  Int?
 }
