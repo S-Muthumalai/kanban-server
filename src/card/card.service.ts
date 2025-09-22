@@ -32,7 +32,7 @@ export class CardService {
   }
 
   async update(id: number, updateCardDto: UpdateCardDto) {
-    const card = await this.findOne(id);
+    await this.findOne(id);
 
     return this.prisma.cardDetail.update({
       where: { id },
@@ -41,7 +41,7 @@ export class CardService {
   }
 
   async remove(id: number) {
-    const card = await this.findOne(id);
+    await this.findOne(id);
 
     return this.prisma.cardDetail.delete({
       where: { id },
